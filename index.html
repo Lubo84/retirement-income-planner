@@ -6,20 +6,20 @@
 <meta name="theme-color" content="#002855">
 <meta name="description" content="Explore how much income you might want in retirement, using your take-home pay or the ASFA Retirement Standard.">
 <title>Retirement Income Planner | Hostplus prototype</title>
-<link rel="stylesheet" href="style.css?v=projection-1">
+<link rel="stylesheet" href="style.css?v=rpc-appearance-1">
 <script src="app.js?v=projection-1" defer></script>
 </head>
 <body>
-<header class="top"><div class="shell top-inner"><img class="brandmark" src="hostplus.svg" width="96" height="130" alt="Hostplus"><div class="brand"><span>Retirement Income Planner</span><small>Prototype for review</small></div><span class="locale">Australia <b>·</b> AUD</span></div></header>
+<header class="top"><div class="shell top-inner"><img class="brandmark" src="hostplus.svg?v=positive" width="96" height="130" alt="Hostplus"><div class="brand"><span>Retirement Income Planner</span><small>Prototype for review</small></div>  <div class="tabs" role="tablist" aria-label="Choose a starting point">
+    <button type="button" id="income-tab" role="tab" aria-selected="true" aria-controls="income-panel">Take-home pay</button>
+    <button type="button" id="asfa-tab" role="tab" aria-selected="false" aria-controls="asfa-panel" tabindex="-1">ASFA standards</button>
+  </div>
+<span class="locale">Australia <b>·</b> AUD</span></div></header>
 <main class="shell">
   <section class="intro" aria-labelledby="title">
-    <h1 id="title">What could you live on<br class="desktop"> <span>in retirement?</span></h1>
+    <h1 id="title">What could you live on in retirement?</h1>
     <p>Explore how much of your take-home pay you might want in retirement, or start with a budget for the lifestyle you have in mind.</p>
   </section>
-  <div class="tabs" role="tablist" aria-label="Choose a starting point">
-    <button type="button" id="income-tab" role="tab" aria-selected="true" aria-controls="income-panel"><span class="tab-icon" aria-hidden="true">$</span> Take-home pay</button>
-    <button type="button" id="asfa-tab" role="tab" aria-selected="false" aria-controls="asfa-panel" tabindex="-1"><span class="tab-icon asfa-icon" aria-hidden="true">≡</span> ASFA standards</button>
-  </div>
   <section id="income-panel" class="layout" role="tabpanel" aria-labelledby="income-tab">
     <div class="card setup">
       <h2>Your current income</h2>
