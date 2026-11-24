@@ -39,7 +39,7 @@
       <details id="tax-details"><summary>How we estimate tax</summary><p>Uses 2026–27 Australian resident income tax rates and the low income tax offset. The Medicare levy uses the 2% rate and 2025–26 single thresholds. The estimate assumes your salary is your taxable income and excludes HELP repayments, the Medicare levy surcharge and other offsets or adjustments. For a more precise starting point, enter your after-tax pay.</p><a href="https://www.ato.gov.au/tax-rates-and-codes/tax-rates-australian-residents" target="_blank" rel="noopener">Australian Taxation Office</a></details>
     </div>
     <div class="results">
-      <div class="feature"><p class="kicker">Illustrative retirement target</p><div class="headline" id="income-target" aria-live="polite"></div><p id="income-description" class="feature-meta"></p></div>
+      <div class="feature"><p class="kicker">Illustrative retirement target</p><div class="headline" id="income-target" aria-live="polite"></div><p id="income-description" class="feature-meta"></p><button type="button" class="track" id="income-track" aria-expanded="false" aria-controls="projection">See how I’m tracking</button></div>
       <div class="card compare">
         <div class="compare-head"><div><h2>Compare income targets</h2></div><div id="income-period" class="period-switch"></div></div>
         <p class="guide-copy"><strong>Why start at 70%?</strong> It’s a common rule of thumb because some costs, like travel to work, may fall when you retire. Try a few percentages to see what would cover your spending.</p>
@@ -71,7 +71,7 @@
       <details><summary>About the ASFA figures</summary><p>These are June quarter 2026 budgets for people aged 65–84. The couple amount covers both people together. Modest and Comfortable assume you own your home. The separate Modest renting budget includes rent.</p><a href="https://www.superannuation.asn.au/consumers/retirement-standard/" target="_blank" rel="noopener">ASFA Retirement Standard</a></details>
     </div>
     <div class="results">
-      <div class="feature"><p class="kicker">Illustrative retirement target</p><div class="headline" id="asfa-target" aria-live="polite"></div><p id="asfa-description" class="feature-meta"></p></div>
+      <div class="feature"><p class="kicker">Illustrative retirement target</p><div class="headline" id="asfa-target" aria-live="polite"></div><p id="asfa-description" class="feature-meta"></p><button type="button" class="track" id="asfa-track" aria-expanded="false" aria-controls="projection">See how I’m tracking</button></div>
       <div class="card compare">
         <div class="compare-head"><div><h2>Give your budget a boost</h2></div><div id="asfa-period" class="period-switch"></div></div>
         <p class="guide-copy">Try adding a little more if you’d like extra room for travel, hobbies or helping family.</p>
@@ -85,7 +85,23 @@
       </div>
     </div>
   </section>
-  <footer><p>This prototype is for review. The targets are illustrative and shown in today’s dollars. Your entries stay in this browser tab.</p><p><a href="https://www.superannuation.asn.au/consumers/retirement-standard/" target="_blank" rel="noopener">ASFA figures</a><span>·</span><a href="https://www.ato.gov.au/tax-rates-and-codes/tax-rates-australian-residents" target="_blank" rel="noopener">ATO tax rates</a></p></footer>
+  <section id="projection" class="card projection" hidden aria-labelledby="projection-heading">
+    <h2 id="projection-heading">Check your target</h2>
+    <p id="projection-summary" aria-live="polite"></p>
+    <form id="projection-form" autocomplete="off">
+      <fieldset class="person-fields" id="subject-fields"><legend>Your details</legend></fieldset>
+      <label class="partner-toggle"><input type="checkbox" id="include-partner"> Include my partner</label>
+      <fieldset class="person-fields" id="partner-fields" hidden disabled><legend>Your partner’s details</legend></fieldset>
+      <label class="housing">Do you own your home or expect to in retirement?
+        <select id="projection-housing" required><option value="">Select an option</option><option value="true">Yes</option><option value="false">No</option></select>
+      </label>
+      <p id="housing-note" class="note" hidden>When the calculator opens, select “Age pension and other income / assets” and clear “I own my home or expect to in retirement”. Check the updated projection after that change.</p>
+      <p class="handoff-note">Your target and details will be sent to the Hostplus Retirement Projection Calculator in the web address. Anyone you share that address with can see them.</p>
+      <label class="acknowledge"><input type="checkbox" id="rpc-acknowledged" required><span>I have read and accept the <a href="https://hostplus.gbsau.com/supermodeller-v3/" target="_blank" rel="noopener noreferrer">calculator’s disclaimer and assumptions</a>. Select “View/edit disclaimer and assumptions” on its opening screen.</span></label>
+      <button type="submit" class="launch">View my projection</button>
+    </form>
+  </section>
+  <footer><p>This prototype is for review. The targets are illustrative and shown in today’s dollars.</p><p><a href="https://www.superannuation.asn.au/consumers/retirement-standard/" target="_blank" rel="noopener">ASFA figures</a><span>·</span><a href="https://www.ato.gov.au/tax-rates-and-codes/tax-rates-australian-residents" target="_blank" rel="noopener">ATO tax rates</a></p></footer>
 </main>
 </body>
 </html>

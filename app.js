@@ -65,7 +65,11 @@ function addPeriodSwitch(panel) {
 
 function showTarget(id, annual, period) {
   const target = byId(id);
+  const path = id.split('-')[0];
+  projectionTargets[path] = annual === null ? null : Math.round(annual);
+  byId(path + '-track').disabled = !(projectionTargets[path] > 0);
   target.replaceChildren(formatTarget(annual, period));
+  if (activeProjection === path) syncProjection();
   if (annual !== null) {
     const unit = document.createElement('small');
     unit.textContent = 'per ' + period;
@@ -128,6 +132,7 @@ function renderAsfa() {
 
 const tabs = [...document.querySelectorAll('[role="tab"]')];
 function switchTab(active) {
+  if (activeProjection && active.id !== activeProjection + '-tab') closeProjection();
   tabs.forEach((tab) => {
     const isActive = tab === active;
     tab.setAttribute('aria-selected', String(isActive));
@@ -178,6 +183,141 @@ byId('boost-presets').addEventListener('click', (event) => {
   if (event.target.dataset.boost === undefined) return;
   byId('boost').value = event.target.dataset.boost;
   renderAsfa();
+});
+
+
+const projectionTargets = { income: null, asfa: null };
+let activeProjection = null;
+let lastStandard = '';
+let lastSalaryPrefill = '';
+
+function addPersonFields(person) {
+  const group = byId(person + '-fields');
+  const field = (key, label, attrs) =>
+    '<label>' + label + '<input name="' + person + key + '" ' + attrs + ' required></label>';
+  group.insertAdjacentHTML('beforeend', '<div class="field-grid">' +
+    field('Age', 'Current age', 'type="number" inputmode="numeric" min="18" max="100"') +
+    '<label>Gender<select name="' + person + 'Sex" required><option value="">Select</option><option>Male</option><option>Female</option></select></label>' +
+    '<label>Currently<select name="' + person + 'Retired"><option value="false">Working</option><option value="true">Retired</option></select></label>' +
+    field('RetirementAge', 'Retirement age', 'type="number" inputmode="numeric" min="18" max="100" value="67"') +
+    field('Salary', 'Annual salary before tax ($)', 'type="text" inputmode="decimal"') +
+    field('SuperannuationBalance', 'Current super balance ($)', 'type="text" inputmode="decimal"') +
+    field('EmployerContribution', 'Employer contributions (%)', 'type="number" inputmode="decimal" step="any" min="0" max="100" value="12"') +
+    '</div>');
+}
+
+addPersonFields('subject');
+addPersonFields('partner');
+const projectionForm = byId('projection-form');
+const control = name => projectionForm.elements.namedItem(name);
+
+function displayPartner() {
+  const included = byId('include-partner').checked;
+  byId('partner-fields').hidden = !included;
+  byId('partner-fields').disabled = !included;
+}
+
+function syncProjection() {
+  const isAsfa = activeProjection === 'asfa';
+  const amount = projectionTargets[activeProjection];
+  if (!amount) {
+    closeProjection();
+    return;
+  }
+  if (isAsfa) {
+    const household = checked('household');
+    const standard = checked('standard');
+    byId('include-partner').checked = household === 'couple';
+    if (lastStandard !== standard) byId('projection-housing').value = standard === 'renters' ? 'false' : 'true';
+    lastStandard = standard;
+  }
+  byId('include-partner').closest('label').hidden = isAsfa;
+  const salary = parseIncome(byId('income').value);
+  const prefill = incomeKind === 'gross' && !showingExample && salary !== null ? String(salary) : '';
+  if (control('subjectSalary').value === lastSalaryPrefill) control('subjectSalary').value = prefill;
+  lastSalaryPrefill = prefill;
+  displayPartner();
+  byId('projection-summary').textContent = (byId('include-partner').checked ? 'Your combined target is ' : 'Your target is ') +
+    money.format(amount) + ' a year. Add your details to see how your projected income compares.';
+  byId('housing-note').hidden = byId('projection-housing').value !== 'false';
+}
+
+function closeProjection() {
+  byId(activeProjection + '-track').setAttribute('aria-expanded', 'false');
+  byId('projection').hidden = true;
+  activeProjection = null;
+}
+
+for (const path of Object.keys(projectionTargets)) {
+  const button = byId(path + '-track');
+  button.addEventListener('click', () => {
+    if (activeProjection === path) return closeProjection();
+    activeProjection = path;
+    button.closest('.feature').after(byId('projection'));
+    byId('projection').hidden = false;
+    button.setAttribute('aria-expanded', 'true');
+    syncProjection();
+  });
+}
+
+function updatePerson(person) {
+  const retired = control(person + 'Retired').value === 'true';
+  for (const key of ['Salary', 'EmployerContribution', 'RetirementAge']) {
+    const input = control(person + key);
+    input.disabled = retired;
+    input.closest('label').hidden = retired;
+  }
+}
+
+projectionForm.addEventListener('input', event => event.target.setCustomValidity?.(''));
+projectionForm.addEventListener('change', event => {
+  if (event.target.name === 'subjectRetired') updatePerson('subject');
+  if (event.target.name === 'partnerRetired') updatePerson('partner');
+  if ([byId('include-partner'), byId('projection-housing')].includes(event.target)) syncProjection();
+});
+
+projectionForm.addEventListener('submit', event => {
+  event.preventDefault();
+  const target = projectionTargets[activeProjection];
+  if (!target || !activeProjection) return;
+  const includePartner = byId('include-partner').checked;
+  const url = new URL('https://hostplus.gbsau.com/supermodeller-v3/');
+  const params = url.searchParams;
+  params.set('enable', '1');
+  params.set('lifeStage', '3');
+  params.set('includePartner', String(includePartner));
+  params.set('homeOwner', byId('projection-housing').value);
+  for (const person of includePartner ? ['subject', 'partner'] : ['subject']) {
+    const retired = control(person + 'Retired').value === 'true';
+    const age = Number(control(person + 'Age').value);
+    const retirementAge = control(person + 'RetirementAge');
+    if (!retired && Number(retirementAge.value) < age) {
+      retirementAge.setCustomValidity('Enter your current age or a later retirement age.');
+      retirementAge.reportValidity();
+      retirementAge.setCustomValidity('');
+      return;
+    }
+    for (const key of ['Salary', 'SuperannuationBalance']) {
+      const input = control(person + key);
+      const amount = retired && key === 'Salary' ? 0 : parseIncome(input.value);
+      if (amount === null) {
+        input.setCustomValidity('Enter a dollar amount from $0 to $10,000,000.');
+        input.reportValidity();
+        return;
+      }
+      params.set(person + key, String(amount));
+    }
+    params.set(person + 'Age', String(age));
+    params.set(person + 'Sex', control(person + 'Sex').value);
+    params.set(person + 'Retired', String(retired));
+    params.set(person + 'RetirementAge', retired ? String(age) : retirementAge.value);
+    params.set(person + 'EmployerContribution', retired ? '0' : control(person + 'EmployerContribution').value);
+  }
+  params.set('retirementIncome', String(target));
+  params.set('disclaimerAccepted', String(byId('rpc-acknowledged').checked));
+  params.set('navigatePage', 'yourRetirement');
+  url.hash = '/yourRetirement';
+  window.location.assign(url.href);
 });
 
 renderIncome();
