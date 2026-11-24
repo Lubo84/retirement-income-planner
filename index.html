@@ -14,7 +14,7 @@
 <main class="shell">
   <section class="intro" aria-labelledby="title">
     <h1 id="title">What could you live on<br class="desktop"> <span>in retirement?</span></h1>
-    <p>Start with your take-home pay or a retirement budget. Try a few targets and see what each would give you to spend.</p>
+    <p>Explore how much of your take-home pay you might want in retirement, or start with a budget for the lifestyle you have in mind.</p>
   </section>
   <div class="tabs" role="tablist" aria-label="Choose a starting point">
     <button type="button" id="income-tab" role="tab" aria-selected="true" aria-controls="income-panel"><span class="tab-icon" aria-hidden="true">$</span> Take-home pay</button>
@@ -41,15 +41,22 @@
     <div class="results">
       <div class="feature"><p class="kicker">Illustrative retirement target</p><div class="headline" id="income-target" aria-live="polite"></div><p id="income-description" class="feature-meta"></p></div>
       <div class="card compare">
-        <div class="compare-head"><div><h2>Compare income targets</h2><p>Select a percentage to explore it.</p></div><div id="income-period" class="period-switch"></div></div>
+        <div class="compare-head"><div><h2>Compare income targets</h2></div><div id="income-period" class="period-switch"></div></div>
+        <p class="guide-copy"><strong>Why start at 70%?</strong> It’s a common rule of thumb because some costs, like travel to work, may fall when you retire. Try a few percentages to see what would cover your spending.</p>
         <fieldset class="scenario"><legend class="sr-only">Percentage of take-home pay</legend><div id="income-rows" class="rows"></div></fieldset>
+        <details>
+          <summary>When might I need more or less?</summary>
+          <p>If most of your pay goes towards essentials, you may need close to 100% of it. If you’ve recently cut back your hours, even all of your current pay may fall short of what you want to spend.</p>
+          <p>If your hours vary or you work casually, try the amount you usually take home over a full year. If you expect to have fewer bills in retirement, a lower percentage might suit you.</p>
+          <a href="https://moneysmart.gov.au/plan-for-your-retirement/work-out-how-much-you-need-to-retire" target="_blank" rel="noopener">Explore retirement costs with Moneysmart</a>
+        </details>
       </div>
     </div>
   </section>
   <section id="asfa-panel" class="layout" role="tabpanel" aria-labelledby="asfa-tab" hidden>
     <div class="card setup">
       <h2>Pick a retirement budget</h2>
-      <p>ASFA estimates what households spend on different lifestyles in retirement.</p>
+      <p>If you’re unsure what retirement might cost, the ASFA Retirement Standard gives you example budgets. Modest covers everyday essentials with some room for leisure. Comfortable allows more for things like eating out and holidays.</p>
       <fieldset>
         <legend>Who are you planning for?</legend>
         <div class="segmented">
@@ -61,12 +68,13 @@
         <legend>Choose a starting budget</legend>
         <div id="standards-list" class="rows"></div>
       </fieldset>
-      <details><summary>About the ASFA figures</summary><p>Based on June quarter 2026 annual spending budgets for ages 65–84. Couple figures are combined. Modest and Comfortable assume you own your home. ASFA also publishes a separate Modest budget for renters.</p><a href="https://www.superannuation.asn.au/consumers/retirement-standard/" target="_blank" rel="noopener">ASFA Retirement Standard</a></details>
+      <details><summary>About the ASFA figures</summary><p>These are June quarter 2026 budgets for people aged 65–84. The couple amount covers both people together. Modest and Comfortable assume you own your home. The separate Modest renting budget includes rent.</p><a href="https://www.superannuation.asn.au/consumers/retirement-standard/" target="_blank" rel="noopener">ASFA Retirement Standard</a></details>
     </div>
     <div class="results">
       <div class="feature"><p class="kicker">Illustrative retirement target</p><div class="headline" id="asfa-target" aria-live="polite"></div><p id="asfa-description" class="feature-meta"></p></div>
       <div class="card compare">
-        <div class="compare-head"><div><h2>Give your budget a boost</h2><p>See how extra spending changes your target.</p></div><div id="asfa-period" class="period-switch"></div></div>
+        <div class="compare-head"><div><h2>Give your budget a boost</h2></div><div id="asfa-period" class="period-switch"></div></div>
+        <p class="guide-copy">Try adding a little more if you’d like extra room for travel, hobbies or helping family.</p>
         <div class="boost-controls">
           <label for="boost">Increase above the ASFA budget</label>
           <div class="boost-input"><input id="boost" type="number" inputmode="decimal" min="0" max="500" step="any" value="0" aria-describedby="boost-error"><span>%</span></div>
